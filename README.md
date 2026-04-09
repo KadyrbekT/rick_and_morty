@@ -16,6 +16,24 @@
 
 ---
 
+## Скриншоты приложения
+
+<img width="360" height="732" alt="Снимок экрана 2026-04-09 в 17 30 25" src="https://github.com/user-attachments/assets/b4f3c650-4669-4e75-a516-bc9532f0513a" />
+<img width="357" height="722" alt="Снимок экрана 2026-04-09 в 17 31 16" src="https://github.com/user-attachments/assets/5dbf3c36-6222-4ec3-813c-e87c4943ff73" />
+<img width="346" height="722" alt="Снимок экрана 2026-04-09 в 17 32 02" src="https://github.com/user-attachments/assets/d47eef74-f93f-4579-939b-be4d5b69eba3" />
+<img width="356" height="724" alt="Снимок экрана 2026-04-09 в 17 32 37" src="https://github.com/user-attachments/assets/3805afae-af3d-43b2-b9aa-00e82d7b2abf" />
+<img width="355" height="727" alt="Снимок экрана 2026-04-09 в 17 34 14" src="https://github.com/user-attachments/assets/b4934a99-ddbf-4ab7-8c9b-163577e9fd3d" />
+<img width="354" height="722" alt="Снимок экрана 2026-04-09 в 17 34 51" src="https://github.com/user-attachments/assets/48947514-9c08-4c8c-99b3-4d5381a674f5" />
+<img width="348" height="725" alt="Снимок экрана 2026-04-09 в 17 36 49" src="https://github.com/user-attachments/assets/e0109934-6fe7-4371-8e
+<img width="363" height="725" alt="Снимок экрана 2026-04-09 в 17 37 32" src="https://github.com/user-attachments/assets/6a443cf4-631f-43cd-9207-bf868e4dbf22" />
+d2-1c8cf2a5e0a7" />
+<img width="354" height="727" alt="Снимок экрана 2026-04-09 в 17 38 17" src="https://github.com/user-attachments/assets/ce45b46d-1286-458e-a2d5-52821dc1a327" />
+<img width="360" height="735" alt="Снимок экрана 2026-04-09 в 17 38 57" src="https://github.com/user-attachments/assets/1eb264a1-a2af-4c3f-9fc9-f648147d1852" />
+<img width="356" height="730" alt="Снимок экрана 2026-04-09 в 17 40 14" src="https://github.com/user-attachments/assets/36f5d71c-e11a-470d-84a5-c0f7a60cb251" />
+<img width="356" height="727" alt="Снимок экрана 2026-04-09 в 17 40 54" src="https://github.com/user-attachments/assets/69b89bff-f28d-40f5-b71e-e6ca511eff9f" />
+
+---
+
 ## Архитектура
 
 Проект построен по **Clean Architecture** с feature-first структурой.
