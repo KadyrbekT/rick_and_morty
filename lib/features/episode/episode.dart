@@ -1,0 +1,12 @@
+export 'domain/entities/episode.dart';
+export 'domain/repositories/episode_repository.dart';
+export 'domain/usecases/get_episodes.dart';
+export 'data/models/episode_model.dart';
+export 'data/datasources/episode_remote_datasource.dart';
+export 'data/datasources/episode_local_datasource.dart';
+export 'data/repositories/episode_repository_impl.dart';
+export 'presentation/bloc/episode_event.dart';
+export 'presentation/bloc/episode_state.dart';
+export 'presentation/bloc/episode_bloc.dart';
+export 'presentation/pages/episode_page.dart';
+export 'presentation/widgets/episode_card.dart';

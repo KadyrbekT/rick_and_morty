@@ -7,11 +7,22 @@ import '../repositories/character_repository.dart';
 class CharacterParams extends Equatable {
   final int page;
   final String? name;
+  final String? status;
+  final String? species;
+  final String? type;
+  final String? gender;
 
-  const CharacterParams({required this.page, this.name});
+  const CharacterParams({
+    required this.page,
+    this.name,
+    this.status,
+    this.species,
+    this.type,
+    this.gender,
+  });
 
   @override
-  List<Object?> get props => [page, name];
+  List<Object?> get props => [page, name, status, species, type, gender];
 }
 
 class GetCharacters {
@@ -21,6 +32,13 @@ class GetCharacters {
 
   Future<Either<Failure, ({List<Character> characters, bool hasMore})>> call(
       CharacterParams params) {
-    return repository.getCharacters(params.page, name: params.name);
+    return repository.getCharacters(
+      params.page,
+      name: params.name,
+      status: params.status,
+      species: params.species,
+      type: params.type,
+      gender: params.gender,
+    );
   }
 }

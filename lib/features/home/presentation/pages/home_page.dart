@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/l10n/l10n_extension.dart';
 import '../../../../core/theme/theme_cubit.dart';
 import '../bloc/character_bloc.dart';
 import '../bloc/character_event.dart';
 import '../bloc/character_state.dart';
 import '../widgets/character_card.dart';
+import '../widgets/character_filter_sheet.dart';
 import '../widgets/character_shimmer.dart';
 
 class HomePage extends StatefulWidget {
@@ -38,8 +40,7 @@ class _HomePageState extends State<HomePage> {
   void _onScroll() {
     if (!_scrollController.hasClients) return;
     final maxScroll = _scrollController.position.maxScrollExtent;
-    final current = _scrollController.offset;
-    if (current >= maxScroll * 0.9) {
+    if (_scrollController.offset >= maxScroll * 0.9) {
       context.read<CharacterBloc>().add(const FetchMoreCharacters());
     }
   }
@@ -54,8 +55,19 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _onSearchChanged(String query) {
-    context.read<CharacterBloc>().add(SearchCharacters(query));
+  Future<void> _openFilterSheet(CharacterFilter current) async {
+    final result = await showModalBottomSheet<CharacterFilter>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => CharacterFilterSheet(current: current),
+    );
+    if (result != null && mounted) {
+      context.read<CharacterBloc>().add(ApplyCharacterFilter(result));
+    }
   }
 
   @override
@@ -66,9 +78,10 @@ class _HomePageState extends State<HomePage> {
             ? TextField(
                 controller: _searchController,
                 autofocus: true,
-                onChanged: _onSearchChanged,
-                decoration: const InputDecoration(
-                  hintText: 'Поиск персонажей...',
+                onChanged: (q) =>
+                    context.read<CharacterBloc>().add(SearchCharacters(q)),
+                decoration: InputDecoration(
+                  hintText: context.l10n.searchCharactersHint,
                   border: InputBorder.none,
                   isDense: true,
                 ),
@@ -77,13 +90,14 @@ class _HomePageState extends State<HomePage> {
             : const Text('Rick & Morty'),
         actions: [
           IconButton(
-            tooltip: _isSearching ? 'Закрыть поиск' : 'Поиск',
+            tooltip: _isSearching ? context.l10n.closeSearch : context.l10n.search,
             icon: Icon(_isSearching ? Icons.close : Icons.search),
             onPressed: _toggleSearch,
           ),
+          _FilterButton(onTap: _openFilterSheet),
           _SortButton(),
           IconButton(
-            tooltip: 'Сменить тему',
+            tooltip: context.l10n.changeTheme,
             icon: BlocBuilder<ThemeCubit, ThemeMode>(
               builder: (_, mode) => Icon(
                 mode == ThemeMode.dark
@@ -105,7 +119,7 @@ class _HomePageState extends State<HomePage> {
           if (state.status == CharacterStatus.failure &&
               state.characters.isEmpty) {
             return _ErrorView(
-              message: state.errorMessage ?? 'Ошибка загрузки',
+              message: state.errorMessage ?? context.l10n.loadingError,
               onRetry: () =>
                   context.read<CharacterBloc>().add(const FetchCharacters()),
             );
@@ -121,7 +135,6 @@ class _HomePageState extends State<HomePage> {
             color: Theme.of(context).primaryColor,
             onRefresh: () async {
               context.read<CharacterBloc>().add(const RefreshCharacters());
-              // Wait for the bloc to emit a success/failure state
               await context.read<CharacterBloc>().stream.firstWhere(
                     (s) => s.status != CharacterStatus.loading,
                   );
@@ -148,6 +161,64 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+// ─── Filter button ────────────────────────────────────────────────────────────
+
+class _FilterButton extends StatelessWidget {
+  final void Function(CharacterFilter current) onTap;
+
+  const _FilterButton({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<CharacterBloc, CharacterState>(
+      buildWhen: (prev, curr) => prev.filter != curr.filter,
+      builder: (context, state) {
+        final count = state.filter.activeCount;
+        return Stack(
+          alignment: Alignment.topRight,
+          children: [
+            IconButton(
+              tooltip: context.l10n.filters,
+              icon: Icon(
+                Icons.filter_list_rounded,
+                color: state.filter.isActive
+                    ? Theme.of(context).colorScheme.primary
+                    : null,
+              ),
+              onPressed: () => onTap(state.filter),
+            ),
+            if (count > 0)
+              Positioned(
+                top: 6,
+                right: 6,
+                child: Container(
+                  width: 16,
+                  height: 16,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Text(
+                      '$count',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+// ─── Sort button ─────────────────────────────────────────────────────────────
+
 class _SortButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -156,20 +227,19 @@ class _SortButton extends StatelessWidget {
       builder: (context, state) {
         final isActive = state.sortBy != SortBy.none;
         return PopupMenuButton<SortBy>(
-          tooltip: 'Сортировка',
+          tooltip: context.l10n.sortBy,
           icon: Icon(
             Icons.sort_rounded,
             color: isActive ? Theme.of(context).primaryColor : null,
           ),
-          onSelected: (sort) => context
-              .read<CharacterBloc>()
-              .add(SortCharactersEvent(sort)),
-          itemBuilder: (_) => [
-            _sortItem(SortBy.none, 'По умолчанию', Icons.list, state.sortBy),
-            _sortItem(SortBy.nameAsc, 'Имя А→Я', Icons.sort_by_alpha, state.sortBy),
-            _sortItem(SortBy.nameDesc, 'Имя Я→А', Icons.sort_by_alpha, state.sortBy),
-            _sortItem(SortBy.statusAlive, 'Живые первые', Icons.favorite_border, state.sortBy),
-            _sortItem(SortBy.statusDead, 'Мёртвые первые', Icons.heart_broken_outlined, state.sortBy),
+          onSelected: (sort) =>
+              context.read<CharacterBloc>().add(SortCharactersEvent(sort)),
+          itemBuilder: (ctx) => [
+            _sortItem(SortBy.none, ctx.l10n.sortDefault, Icons.list, state.sortBy),
+            _sortItem(SortBy.nameAsc, ctx.l10n.sortNameAsc, Icons.sort_by_alpha, state.sortBy),
+            _sortItem(SortBy.nameDesc, ctx.l10n.sortNameDesc, Icons.sort_by_alpha, state.sortBy),
+            _sortItem(SortBy.statusAlive, ctx.l10n.sortAliveFirst, Icons.favorite_border, state.sortBy),
+            _sortItem(SortBy.statusDead, ctx.l10n.sortDeadFirst, Icons.heart_broken_outlined, state.sortBy),
           ],
         );
       },
@@ -192,8 +262,7 @@ class _SortButton extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-              fontWeight:
-                  isSelected ? FontWeight.bold : FontWeight.normal,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
             ),
           ),
           if (isSelected) ...[
@@ -205,6 +274,8 @@ class _SortButton extends StatelessWidget {
     );
   }
 }
+
+// ─── Error / Empty views ──────────────────────────────────────────────────────
 
 class _ErrorView extends StatelessWidget {
   final String message;
@@ -220,22 +291,17 @@ class _ErrorView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.wifi_off_rounded,
-              size: 72,
-              color: Theme.of(context).disabledColor,
-            ),
+            Icon(Icons.wifi_off_rounded,
+                size: 72, color: Theme.of(context).disabledColor),
             const SizedBox(height: 16),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
+            Text(message,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium),
             const SizedBox(height: 24),
             FilledButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh),
-              label: const Text('Попробовать снова'),
+              label: Text(context.l10n.retry),
             ),
           ],
         ),
@@ -255,16 +321,13 @@ class _EmptyView extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.search_off_rounded,
-            size: 72,
-            color: Theme.of(context).disabledColor,
-          ),
+          Icon(Icons.search_off_rounded,
+              size: 72, color: Theme.of(context).disabledColor),
           const SizedBox(height: 16),
           Text(
             query.isNotEmpty
-                ? 'Персонаж "$query" не найден'
-                : 'Список пуст',
+                ? context.l10n.characterNotFound(query)
+                : context.l10n.emptyList,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
         ],

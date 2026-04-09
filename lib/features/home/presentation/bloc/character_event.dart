@@ -3,6 +3,31 @@ import '../../domain/entities/character.dart';
 
 enum SortBy { none, nameAsc, nameDesc, statusAlive, statusDead }
 
+/// Immutable filter value object for character API queries.
+class CharacterFilter extends Equatable {
+  final String? status;  // alive | dead | unknown
+  final String? species;
+  final String? type;
+  final String? gender;  // female | male | genderless | unknown
+
+  const CharacterFilter({this.status, this.species, this.type, this.gender});
+
+  static const empty = CharacterFilter();
+
+  bool get isActive =>
+      (status != null && status!.isNotEmpty) ||
+      (species != null && species!.isNotEmpty) ||
+      (type != null && type!.isNotEmpty) ||
+      (gender != null && gender!.isNotEmpty);
+
+  int get activeCount => [status, species, type, gender]
+      .where((v) => v != null && v.isNotEmpty)
+      .length;
+
+  @override
+  List<Object?> get props => [status, species, type, gender];
+}
+
 sealed class CharacterEvent extends Equatable {
   const CharacterEvent();
 
@@ -28,6 +53,14 @@ final class SearchCharacters extends CharacterEvent {
 
   @override
   List<Object?> get props => [query];
+}
+
+final class ApplyCharacterFilter extends CharacterEvent {
+  final CharacterFilter filter;
+  const ApplyCharacterFilter(this.filter);
+
+  @override
+  List<Object?> get props => [filter];
 }
 
 final class SortCharactersEvent extends CharacterEvent {

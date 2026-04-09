@@ -20,9 +20,12 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
     on<FetchMoreCharacters>(_onFetchMore);
     on<RefreshCharacters>(_onRefresh);
     on<SearchCharacters>(_onSearch);
+    on<ApplyCharacterFilter>(_onApplyFilter);
     on<SortCharactersEvent>(_onSort);
     on<ToggleFavoriteEvent>(_onToggleFavorite);
   }
+
+  // ─── Handlers ────────────────────────────────────────────────────────────────
 
   Future<void> _onFetch(
     FetchCharacters event,
@@ -31,9 +34,86 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
     emit(state.copyWith(status: CharacterStatus.loading, clearError: true));
 
     final favoriteIds = await favoriteRepository.getFavoriteIds();
-    final result = await getCharacters(
-      const CharacterParams(page: 1),
+    final result = await _fetch(page: 1, query: '', filter: CharacterFilter.empty);
+
+    result.fold(
+      (failure) => emit(state.copyWith(
+        status: CharacterStatus.failure,
+        errorMessage: failure.message,
+        favoriteIds: favoriteIds,
+      )),
+      (data) {
+        final sorted = _applySort(data.characters, state.sortBy);
+        emit(state.copyWith(
+          status: CharacterStatus.success,
+          characters: data.characters,
+          filteredCharacters: sorted,
+          favoriteIds: favoriteIds,
+          currentPage: 1,
+          hasMore: data.hasMore,
+          searchQuery: '',
+          filter: CharacterFilter.empty,
+        ));
+      },
     );
+  }
+
+  Future<void> _onFetchMore(
+    FetchMoreCharacters event,
+    Emitter<CharacterState> emit,
+  ) async {
+    if (state.isLoadingMore || !state.hasMore) return;
+
+    emit(state.copyWith(isLoadingMore: true));
+
+    final nextPage = state.currentPage + 1;
+    final result = await _fetch(
+      page: nextPage,
+      query: state.searchQuery,
+      filter: state.filter,
+    );
+
+    result.fold(
+      (failure) => emit(state.copyWith(
+        isLoadingMore: false,
+        errorMessage: failure.message,
+      )),
+      (data) {
+        final allChars = <Character>[...state.characters, ...data.characters];
+        final sorted = _applySort(allChars, state.sortBy);
+        emit(state.copyWith(
+          status: CharacterStatus.success,
+          characters: allChars,
+          filteredCharacters: sorted,
+          currentPage: nextPage,
+          hasMore: data.hasMore,
+          isLoadingMore: false,
+          clearError: true,
+        ));
+      },
+    );
+  }
+
+  Future<void> _onRefresh(
+    RefreshCharacters event,
+    Emitter<CharacterState> emit,
+  ) async {
+    // Preserve active search + filter on pull-to-refresh
+    final query = state.searchQuery;
+    final filter = state.filter;
+
+    emit(state.copyWith(
+      status: CharacterStatus.loading,
+      characters: [],
+      filteredCharacters: [],
+      currentPage: 1,
+      hasMore: true,
+      isLoadingMore: false,
+      clearError: true,
+    ));
+
+    final favoriteIds = await favoriteRepository.getFavoriteIds();
+    final result = await _fetch(page: 1, query: query, filter: filter);
 
     result.fold(
       (failure) => emit(state.copyWith(
@@ -55,48 +135,6 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
     );
   }
 
-  Future<void> _onFetchMore(
-    FetchMoreCharacters event,
-    Emitter<CharacterState> emit,
-  ) async {
-    if (state.isLoadingMore || !state.hasMore) return;
-    // Don't paginate during search — API handles it separately
-    if (state.searchQuery.isNotEmpty) return;
-
-    emit(state.copyWith(isLoadingMore: true));
-
-    final nextPage = state.currentPage + 1;
-    final result = await getCharacters(CharacterParams(page: nextPage));
-
-    result.fold(
-      (failure) => emit(state.copyWith(
-        isLoadingMore: false,
-        errorMessage: failure.message,
-      )),
-      (data) {
-        final allCharacters = [...state.characters, ...data.characters];
-        final sorted = _applySort(allCharacters, state.sortBy);
-        emit(state.copyWith(
-          status: CharacterStatus.success,
-          characters: allCharacters,
-          filteredCharacters: sorted,
-          currentPage: nextPage,
-          hasMore: data.hasMore,
-          isLoadingMore: false,
-          clearError: true,
-        ));
-      },
-    );
-  }
-
-  Future<void> _onRefresh(
-    RefreshCharacters event,
-    Emitter<CharacterState> emit,
-  ) async {
-    emit(const CharacterState());
-    add(const FetchCharacters());
-  }
-
   Future<void> _onSearch(
     SearchCharacters event,
     Emitter<CharacterState> emit,
@@ -105,23 +143,49 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
     emit(state.copyWith(
       searchQuery: query,
       status: CharacterStatus.loading,
+      characters: [],
+      filteredCharacters: [],
+      currentPage: 1,
       clearError: true,
     ));
 
-    if (query.isEmpty) {
-      // Return to main list
-      final sorted = _applySort(state.characters, state.sortBy);
-      emit(state.copyWith(
-        status: CharacterStatus.success,
-        filteredCharacters: sorted,
-        currentPage: 1,
-        hasMore: true,
-      ));
-      return;
-    }
+    final result = await _fetch(page: 1, query: query, filter: state.filter);
 
-    final result = await getCharacters(
-      CharacterParams(page: 1, name: query),
+    result.fold(
+      (failure) => emit(state.copyWith(
+        status: CharacterStatus.failure,
+        errorMessage: failure.message,
+      )),
+      (data) {
+        final sorted = _applySort(data.characters, state.sortBy);
+        emit(state.copyWith(
+          status: CharacterStatus.success,
+          characters: data.characters,
+          filteredCharacters: sorted,
+          hasMore: data.hasMore,
+          currentPage: 1,
+        ));
+      },
+    );
+  }
+
+  Future<void> _onApplyFilter(
+    ApplyCharacterFilter event,
+    Emitter<CharacterState> emit,
+  ) async {
+    emit(state.copyWith(
+      filter: event.filter,
+      status: CharacterStatus.loading,
+      characters: [],
+      filteredCharacters: [],
+      currentPage: 1,
+      clearError: true,
+    ));
+
+    final result = await _fetch(
+      page: 1,
+      query: state.searchQuery,
+      filter: event.filter,
     );
 
     result.fold(
@@ -133,6 +197,7 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
         final sorted = _applySort(data.characters, state.sortBy);
         emit(state.copyWith(
           status: CharacterStatus.success,
+          characters: data.characters,
           filteredCharacters: sorted,
           hasMore: data.hasMore,
           currentPage: 1,
@@ -145,14 +210,8 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
     SortCharactersEvent event,
     Emitter<CharacterState> emit,
   ) async {
-    final source = state.searchQuery.isEmpty
-        ? state.characters
-        : state.filteredCharacters;
-    final sorted = _applySort(source, event.sortBy);
-    emit(state.copyWith(
-      sortBy: event.sortBy,
-      filteredCharacters: sorted,
-    ));
+    final sorted = _applySort(state.characters, event.sortBy);
+    emit(state.copyWith(sortBy: event.sortBy, filteredCharacters: sorted));
   }
 
   Future<void> _onToggleFavorite(
@@ -162,6 +221,23 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
     await toggleFavorite(event.character);
     final updatedIds = await favoriteRepository.getFavoriteIds();
     emit(state.copyWith(favoriteIds: updatedIds));
+  }
+
+  // ─── Helpers ─────────────────────────────────────────────────────────────────
+
+  Future<dynamic> _fetch({
+    required int page,
+    required String query,
+    required CharacterFilter filter,
+  }) {
+    return getCharacters(CharacterParams(
+      page: page,
+      name: query.isEmpty ? null : query,
+      status: filter.status,
+      species: filter.species,
+      type: filter.type,
+      gender: filter.gender,
+    ));
   }
 
   List<Character> _applySort(List<Character> list, SortBy sortBy) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/l10n/l10n_extension.dart';
 import '../../../home/presentation/widgets/character_card.dart';
 import '../bloc/favorite_bloc.dart';
 import '../bloc/favorite_event.dart';
@@ -29,13 +30,13 @@ class _FavoritePageState extends State<FavoritePage>
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Избранное'),
+        title: Text(context.l10n.favoritesTitle),
         actions: [
           BlocBuilder<FavoriteBloc, FavoriteState>(
             builder: (context, state) {
               if (state.favorites.isEmpty) return const SizedBox.shrink();
               return IconButton(
-                tooltip: 'Очистить избранное',
+                tooltip: context.l10n.clearFavorites,
                 icon: const Icon(Icons.delete_sweep_outlined),
                 onPressed: () => _confirmClearAll(context),
               );
@@ -52,7 +53,7 @@ class _FavoritePageState extends State<FavoritePage>
           if (state.status == FavoriteStatus.failure) {
             return Center(
               child: Text(
-                state.errorMessage ?? 'Ошибка загрузки',
+                state.errorMessage ?? context.l10n.loadingError,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             );
@@ -87,7 +88,7 @@ class _FavoritePageState extends State<FavoritePage>
                       .add(RemoveFavoriteEvent(character.id));
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('${character.name} удалён из избранного'),
+                      content: Text(context.l10n.removedFromFavorites(character.name)),
                       duration: const Duration(seconds: 2),
                       behavior: SnackBarBehavior.floating,
                     ),
@@ -102,7 +103,7 @@ class _FavoritePageState extends State<FavoritePage>
                         .add(RemoveFavoriteEvent(character.id));
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text('${character.name} удалён из избранного'),
+                        content: Text(context.l10n.removedFromFavorites(character.name)),
                         duration: const Duration(seconds: 2),
                         behavior: SnackBarBehavior.floating,
                       ),
@@ -121,17 +122,17 @@ class _FavoritePageState extends State<FavoritePage>
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Очистить избранное?'),
-        content: const Text('Все персонажи будут удалены из избранного.'),
+        title: Text(context.l10n.clearFavorites),
+        content: Text(context.l10n.clearFavoritesContent),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Отмена'),
+            child: Text(context.l10n.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
             style: FilledButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Очистить'),
+            child: Text(context.l10n.clear),
           ),
         ],
       ),
@@ -161,14 +162,14 @@ class _EmptyFavoritesView extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            'Избранных персонажей нет',
+            context.l10n.noFavorites,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.normal,
                 ),
           ),
           const SizedBox(height: 8),
           Text(
-            'Нажмите ★ на карточке персонажа,\nчтобы добавить его в избранное',
+            context.l10n.noFavoritesHint,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodySmall,
           ),

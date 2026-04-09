@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/l10n/l10n_extension.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../domain/entities/character.dart';
 import '../bloc/character_bloc.dart';
 import '../bloc/character_event.dart';
 import '../bloc/character_state.dart';
+import '../pages/character_detail_page.dart';
 
 class CharacterCard extends StatelessWidget {
   final Character character;
@@ -24,11 +26,15 @@ class CharacterCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        onTap: () {},
+        onTap: () => Navigator.of(context)
+            .push(CharacterDetailPage.route(character)),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _CharacterImage(imageUrl: character.image),
+            _CharacterImage(
+              imageUrl: character.image,
+              characterId: character.id,
+            ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(12, 12, 4, 12),
@@ -109,45 +115,53 @@ class FavoriteCharacterCard extends StatelessWidget {
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _CharacterImage(imageUrl: character.image),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(12, 12, 4, 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    character.name,
-                    style: theme.textTheme.titleMedium,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 6),
-                  _StatusRow(
-                    status: character.status,
-                    species: character.species,
-                  ),
-                  const SizedBox(height: 4),
-                  _InfoRow(
-                    icon: Icons.wc_outlined,
-                    label: character.gender,
-                    context: context,
-                  ),
-                  const SizedBox(height: 2),
-                  _InfoRow(
-                    icon: Icons.location_on_outlined,
-                    label: character.locationName,
-                    context: context,
-                  ),
-                ],
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: () => Navigator.of(context)
+            .push(CharacterDetailPage.route(character)),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _CharacterImage(
+              imageUrl: character.image,
+              characterId: character.id,
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(12, 12, 4, 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      character.name,
+                      style: theme.textTheme.titleMedium,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 6),
+                    _StatusRow(
+                      status: character.status,
+                      species: character.species,
+                    ),
+                    const SizedBox(height: 4),
+                    _InfoRow(
+                      icon: Icons.wc_outlined,
+                      label: character.gender,
+                      context: context,
+                    ),
+                    const SizedBox(height: 2),
+                    _InfoRow(
+                      icon: Icons.location_on_outlined,
+                      label: character.locationName,
+                      context: context,
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          _FavoriteButton(isFavorite: isFavorite, onTap: onFavoriteTap),
-        ],
+            _FavoriteButton(isFavorite: isFavorite, onTap: onFavoriteTap),
+          ],
+        ),
       ),
     );
   }
@@ -155,18 +169,24 @@ class FavoriteCharacterCard extends StatelessWidget {
 
 class _CharacterImage extends StatelessWidget {
   final String imageUrl;
+  final int characterId;
 
-  const _CharacterImage({required this.imageUrl});
+  const _CharacterImage({
+    required this.imageUrl,
+    required this.characterId,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: const BorderRadius.only(
-        topLeft: Radius.circular(12),
-        bottomLeft: Radius.circular(12),
-      ),
-      child: Image.network(
-        imageUrl,
+    return Hero(
+      tag: 'character_image_$characterId',
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(12),
+          bottomLeft: Radius.circular(12),
+        ),
+        child: Image.network(
+          imageUrl,
         width: 100,
         height: 120,
         fit: BoxFit.cover,
@@ -197,6 +217,7 @@ class _CharacterImage extends StatelessWidget {
             color: Theme.of(context).disabledColor,
           ),
         ),
+      ),
       ),
     );
   }
@@ -275,7 +296,7 @@ class _FavoriteButton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 4, top: 4),
       child: IconButton(
-        tooltip: isFavorite ? 'Убрать из избранного' : 'Добавить в избранное',
+        tooltip: isFavorite ? context.l10n.removeFromFavorites : context.l10n.addToFavorites,
         icon: AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
           transitionBuilder: (child, anim) => ScaleTransition(

@@ -13,6 +13,7 @@ final class CharacterState extends Equatable {
   final bool hasMore;
   final bool isLoadingMore;
   final String searchQuery;
+  final CharacterFilter filter;
   final SortBy sortBy;
   final String? errorMessage;
 
@@ -25,9 +26,12 @@ final class CharacterState extends Equatable {
     this.hasMore = true,
     this.isLoadingMore = false,
     this.searchQuery = '',
+    this.filter = CharacterFilter.empty,
     this.sortBy = SortBy.none,
     this.errorMessage,
   });
+
+  bool get hasActiveQuery => searchQuery.isNotEmpty || filter.isActive;
 
   CharacterState copyWith({
     CharacterStatus? status,
@@ -38,6 +42,7 @@ final class CharacterState extends Equatable {
     bool? hasMore,
     bool? isLoadingMore,
     String? searchQuery,
+    CharacterFilter? filter,
     SortBy? sortBy,
     String? errorMessage,
     bool clearError = false,
@@ -51,6 +56,7 @@ final class CharacterState extends Equatable {
       hasMore: hasMore ?? this.hasMore,
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
       searchQuery: searchQuery ?? this.searchQuery,
+      filter: filter ?? this.filter,
       sortBy: sortBy ?? this.sortBy,
       errorMessage: clearError ? null : errorMessage ?? this.errorMessage,
     );
@@ -66,6 +72,7 @@ final class CharacterState extends Equatable {
         hasMore,
         isLoadingMore,
         searchQuery,
+        filter,
         sortBy,
         errorMessage,
       ];
