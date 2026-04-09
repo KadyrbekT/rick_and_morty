@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import '../../../../core/error/failures.dart';
+import '../../../../core/usecases/usecase.dart';
 import '../entities/episode.dart';
 import '../repositories/episode_repository.dart';
 
@@ -15,11 +16,13 @@ class EpisodeParams extends Equatable {
   List<Object?> get props => [page, name, episodeCode];
 }
 
-class GetEpisodes {
+class GetEpisodes
+    implements UseCase<({List<Episode> episodes, bool hasMore}), EpisodeParams> {
   final EpisodeRepository repository;
 
   const GetEpisodes(this.repository);
 
+  @override
   Future<Either<Failure, ({List<Episode> episodes, bool hasMore})>> call(
     EpisodeParams params,
   ) =>

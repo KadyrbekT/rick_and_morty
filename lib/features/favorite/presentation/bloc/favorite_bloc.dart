@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../domain/usecases/get_favorites.dart';
+import '../../../../core/usecases/usecase.dart';
 import '../../domain/repositories/favorite_repository.dart';
+import '../../domain/usecases/get_favorites.dart';
 import 'favorite_event.dart';
 import 'favorite_state.dart';
 
@@ -21,18 +22,18 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
     Emitter<FavoriteState> emit,
   ) async {
     emit(state.copyWith(status: FavoriteStatus.loading));
-    try {
-      final favorites = await getFavorites();
-      emit(state.copyWith(
+
+    final result = await getFavorites(const NoParams());
+    result.fold(
+      (failure) => emit(state.copyWith(
+        status: FavoriteStatus.failure,
+        errorMessage: failure.message,
+      )),
+      (favorites) => emit(state.copyWith(
         status: FavoriteStatus.success,
         favorites: favorites,
-      ));
-    } catch (e) {
-      emit(state.copyWith(
-        status: FavoriteStatus.failure,
-        errorMessage: e.toString(),
-      ));
-    }
+      )),
+    );
   }
 
   Future<void> _onRemove(
@@ -40,7 +41,10 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
     Emitter<FavoriteState> emit,
   ) async {
     await favoriteRepository.removeFavorite(event.characterId);
-    final updated = await getFavorites();
-    emit(state.copyWith(favorites: updated));
+    final result = await getFavorites(const NoParams());
+    result.fold(
+      (_) {/* keep current list on error */},
+      (favorites) => emit(state.copyWith(favorites: favorites)),
+    );
   }
 }

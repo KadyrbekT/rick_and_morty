@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/usecases/usecase.dart';
 import '../../../home/domain/usecases/get_multiple_characters.dart';
 import '../../domain/entities/episode.dart';
 import '../../domain/usecases/get_episode_by_id.dart';
@@ -28,7 +29,7 @@ class EpisodeDetailCubit extends Cubit<EpisodeDetailState> {
   Future<void> load(Episode initial) async {
     emit(EpisodeDetailLoading(episode: initial));
 
-    final episodeResult = await getEpisodeById(initial.id);
+    final episodeResult = await getEpisodeById(IdParam(initial.id));
 
     await episodeResult.fold(
       // Network failed — fall back to cached data from the list.
@@ -47,7 +48,7 @@ class EpisodeDetailCubit extends Cubit<EpisodeDetailState> {
       return;
     }
 
-    final result = await getMultipleCharacters(episode.characterIds);
+    final result = await getMultipleCharacters(IdsParam(episode.characterIds));
 
     result.fold(
       (failure) => emit(

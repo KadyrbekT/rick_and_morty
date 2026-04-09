@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/usecases/usecase.dart';
 import '../../../home/domain/usecases/get_multiple_characters.dart';
 import '../../domain/entities/location.dart';
 import '../../domain/usecases/get_location_by_id.dart';
@@ -30,9 +31,7 @@ class LocationDetailCubit extends Cubit<LocationDetailState> {
   Future<void> load(Location initial) async {
     emit(LocationDetailLoading(location: initial));
 
-    // Fetch fresh location in parallel with starting the residents fetch
-    // (we need the fresh location first to get the latest residentIds).
-    final locationResult = await getLocationById(initial.id);
+    final locationResult = await getLocationById(IdParam(initial.id));
 
     await locationResult.fold(
       // Network failed — fall back to the data we already have.
@@ -52,7 +51,7 @@ class LocationDetailCubit extends Cubit<LocationDetailState> {
       return;
     }
 
-    final result = await getMultipleCharacters(location.residentIds);
+    final result = await getMultipleCharacters(IdsParam(location.residentIds));
 
     result.fold(
       (failure) => emit(

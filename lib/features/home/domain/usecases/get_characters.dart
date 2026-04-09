@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import '../../../../core/error/failures.dart';
+import '../../../../core/usecases/usecase.dart';
 import '../entities/character.dart';
 import '../repositories/character_repository.dart';
 
@@ -25,13 +26,16 @@ class CharacterParams extends Equatable {
   List<Object?> get props => [page, name, status, species, type, gender];
 }
 
-class GetCharacters {
+class GetCharacters
+    implements UseCase<({List<Character> characters, bool hasMore}), CharacterParams> {
   final CharacterRepository repository;
 
   const GetCharacters(this.repository);
 
+  @override
   Future<Either<Failure, ({List<Character> characters, bool hasMore})>> call(
-      CharacterParams params) {
+    CharacterParams params,
+  ) {
     return repository.getCharacters(
       params.page,
       name: params.name,
