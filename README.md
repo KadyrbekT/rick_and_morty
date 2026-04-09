@@ -24,7 +24,6 @@
 <img width="356" height="724" alt="Снимок экрана 2026-04-09 в 17 32 37" src="https://github.com/user-attachments/assets/3805afae-af3d-43b2-b9aa-00e82d7b2abf" />
 <img width="355" height="727" alt="Снимок экрана 2026-04-09 в 17 34 14" src="https://github.com/user-attachments/assets/b4934a99-ddbf-4ab7-8c9b-163577e9fd3d" />
 <img width="354" height="722" alt="Снимок экрана 2026-04-09 в 17 34 51" src="https://github.com/user-attachments/assets/48947514-9c08-4c8c-99b3-4d5381a674f5" />
-<img width="348" height="725" alt="Снимок экрана 2026-04-09 в 17 36 49" src="https://github.com/user-attachments/assets/e0109934-6fe7-4371-8e
 <img width="363" height="725" alt="Снимок экрана 2026-04-09 в 17 37 32" src="https://github.com/user-attachments/assets/6a443cf4-631f-43cd-9207-bf868e4dbf22" />
 d2-1c8cf2a5e0a7" />
 <img width="354" height="727" alt="Снимок экрана 2026-04-09 в 17 38 17" src="https://github.com/user-attachments/assets/ce45b46d-1286-458e-a2d5-52821dc1a327" />
