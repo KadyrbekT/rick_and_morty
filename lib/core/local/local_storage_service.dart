@@ -22,7 +22,16 @@ class LocalStorageServiceImpl implements LocalStorageService {
   const LocalStorageServiceImpl(this._prefs);
 
   @override
-  Future<String?> getString(String key) async => _prefs.getString(key);
+  Future<String?> getString(String key) async {
+    try {
+      return _prefs.getString(key);
+    } on TypeError {
+      // Stored value has a mismatched type (e.g. bool from an older build).
+      // Clear it so the caller receives null and writes the correct type next time.
+      await _prefs.remove(key);
+      return null;
+    }
+  }
 
   @override
   Future<void> setString(String key, String value) async =>
