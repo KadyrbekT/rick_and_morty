@@ -259,6 +259,5 @@ class AppLocalizationsRu extends AppLocalizations {
   String get lastLocation => 'Последнее местонахождение';
 
   @override
-  String get offlineBanner =>
-      'Нет подключения · показываются кешированные данные';
+  String get offlineBanner => 'Нет подключения к интернету';
 }

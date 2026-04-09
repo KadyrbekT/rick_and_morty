@@ -259,5 +259,5 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lastLocation => 'Last known location';
 
   @override
-  String get offlineBanner => 'No connection · showing cached data';
+  String get offlineBanner => 'No internet connection';
 }

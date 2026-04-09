@@ -98,11 +98,13 @@ class _OfflineBanner extends StatelessWidget {
       color: Colors.transparent,
       child: Container(
         width: double.infinity,
+        margin: const EdgeInsets.symmetric(horizontal: 16),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: isDark
               ? const Color(0xFF7B2D00)
               : const Color(0xFFFF6B35),
+          borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.2),

@@ -102,5 +102,5 @@
   "origin": "Origin",
   "lastLocation": "Last known location",
 
-  "offlineBanner": "No connection · showing cached data"
+  "offlineBanner": "No internet connection"
 }

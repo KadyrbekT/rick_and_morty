@@ -270,6 +270,6 @@
   "lastLocation": "Последнее местонахождение",
   "@lastLocation": { "description": "Character location: last known location" },
 
-  "offlineBanner": "Нет подключения · показываются кешированные данные",
+  "offlineBanner": "Нет подключения к интернету",
   "@offlineBanner": { "description": "Banner shown when device is offline" }
 }

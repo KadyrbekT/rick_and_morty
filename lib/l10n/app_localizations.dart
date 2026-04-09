@@ -569,7 +569,7 @@ abstract class AppLocalizations {
   /// Banner shown when device is offline
   ///
   /// In ru, this message translates to:
-  /// **'Нет подключения · показываются кешированные данные'**
+  /// **'Нет подключения к интернету'**
   String get offlineBanner;
 }
 
