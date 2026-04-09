@@ -31,6 +31,7 @@ d2-1c8cf2a5e0a7" />
 <img width="360" height="735" alt="Снимок экрана 2026-04-09 в 17 38 57" src="https://github.com/user-attachments/assets/1eb264a1-a2af-4c3f-9fc9-f648147d1852" />
 <img width="356" height="730" alt="Снимок экрана 2026-04-09 в 17 40 14" src="https://github.com/user-attachments/assets/36f5d71c-e11a-470d-84a5-c0f7a60cb251" />
 <img width="356" height="727" alt="Снимок экрана 2026-04-09 в 17 40 54" src="https://github.com/user-attachments/assets/69b89bff-f28d-40f5-b71e-e6ca511eff9f" />
+<img width="362" height="733" alt="Снимок экрана 2026-04-09 в 17 43 26" src="https://github.com/user-attachments/assets/8beed75e-349c-428d-9ca9-3784c1bd4376" />
 
 ---
 
