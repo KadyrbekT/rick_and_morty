@@ -24,10 +24,7 @@ final class EpisodeDetailLoaded extends EpisodeDetailState {
   final Episode episode;
   final List<Character> characters;
 
-  const EpisodeDetailLoaded({
-    required this.episode,
-    required this.characters,
-  });
+  const EpisodeDetailLoaded({required this.episode, required this.characters});
 
   @override
   List<Object?> get props => [episode, characters];
