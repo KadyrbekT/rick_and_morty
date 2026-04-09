@@ -72,7 +72,9 @@ Future<void> initDependencies() async {
   );
   sl.registerLazySingleton(() => GetCharacters(sl<CharacterRepository>()));
   sl.registerLazySingleton(() => GetCharacterById(sl<CharacterRepository>()));
-  sl.registerLazySingleton(() => GetMultipleCharacters(sl<CharacterRepository>()));
+  sl.registerLazySingleton(
+    () => GetMultipleCharacters(sl<CharacterRepository>()),
+  );
 
   // ── Favorite ───────────────────────────────────────────────────────────────
   sl.registerLazySingleton<FavoriteRepository>(
@@ -97,7 +99,9 @@ Future<void> initDependencies() async {
   );
   sl.registerLazySingleton(() => GetLocations(sl<LocationRepository>()));
   sl.registerLazySingleton(() => GetLocationById(sl<LocationRepository>()));
-  sl.registerLazySingleton(() => GetMultipleLocations(sl<LocationRepository>()));
+  sl.registerLazySingleton(
+    () => GetMultipleLocations(sl<LocationRepository>()),
+  );
 
   // ── Episode ────────────────────────────────────────────────────────────────
   sl.registerLazySingleton<EpisodeRemoteDataSource>(
@@ -134,18 +138,14 @@ Future<void> initDependencies() async {
       favoriteRepository: sl<FavoriteRepository>(),
     ),
   );
-  sl.registerFactory(
-    () => LocationBloc(getLocations: sl<GetLocations>()),
-  );
+  sl.registerFactory(() => LocationBloc(getLocations: sl<GetLocations>()));
   sl.registerFactory(
     () => LocationDetailCubit(
       getLocationById: sl<GetLocationById>(),
       getMultipleCharacters: sl<GetMultipleCharacters>(),
     ),
   );
-  sl.registerFactory(
-    () => EpisodeBloc(getEpisodes: sl<GetEpisodes>()),
-  );
+  sl.registerFactory(() => EpisodeBloc(getEpisodes: sl<GetEpisodes>()));
   sl.registerFactory(
     () => EpisodeDetailCubit(
       getEpisodeById: sl<GetEpisodeById>(),
