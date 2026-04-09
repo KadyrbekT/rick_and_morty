@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/error/exceptions.dart';
+import '../../../../core/local/local_storage_service.dart';
 import '../models/character_model.dart';
 
 abstract class CharacterLocalDataSource {
@@ -9,19 +9,18 @@ abstract class CharacterLocalDataSource {
 }
 
 class CharacterLocalDataSourceImpl implements CharacterLocalDataSource {
-  final SharedPreferences prefs;
+  final LocalStorageService _storage;
 
   static const _keyPrefix = 'characters_page_';
 
-  CharacterLocalDataSourceImpl(this.prefs);
+  const CharacterLocalDataSourceImpl(this._storage);
 
   @override
   Future<List<CharacterModel>> getCachedCharacters(int page) async {
-    final json = prefs.getString('$_keyPrefix$page');
+    final json = await _storage.getString('$_keyPrefix$page');
     if (json == null) {
       throw const CacheException(message: 'No cached data for this page');
     }
-
     final list = jsonDecode(json) as List<dynamic>;
     return list
         .map((e) => CharacterModel.fromJson(e as Map<String, dynamic>))
@@ -29,8 +28,11 @@ class CharacterLocalDataSourceImpl implements CharacterLocalDataSource {
   }
 
   @override
-  Future<void> cacheCharacters(int page, List<CharacterModel> characters) async {
+  Future<void> cacheCharacters(
+    int page,
+    List<CharacterModel> characters,
+  ) async {
     final json = jsonEncode(characters.map((c) => c.toJson()).toList());
-    await prefs.setString('$_keyPrefix$page', json);
+    await _storage.setString('$_keyPrefix$page', json);
   }
 }

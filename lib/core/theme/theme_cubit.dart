@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../local/local_storage_service.dart';
 
 class ThemeCubit extends Cubit<ThemeMode> {
-  final SharedPreferences _prefs;
+  final LocalStorageService _storage;
   static const _key = 'theme_mode';
 
-  ThemeCubit(this._prefs) : super(_load(_prefs));
+  ThemeCubit(this._storage, {bool initialDark = true})
+      : super(initialDark ? ThemeMode.dark : ThemeMode.light);
 
-  static ThemeMode _load(SharedPreferences prefs) {
-    final isDark = prefs.getBool(_key) ?? true;
-    return isDark ? ThemeMode.dark : ThemeMode.light;
+  /// Loads persisted theme preference before emitting initial state.
+  static Future<ThemeCubit> create(LocalStorageService storage) async {
+    final raw = await storage.getString(_key);
+    final isDark = raw != null ? raw == 'dark' : true;
+    return ThemeCubit(storage, initialDark: isDark);
   }
 
-  void toggle() {
+  Future<void> toggle() async {
     final next = state == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
-    _prefs.setBool(_key, next == ThemeMode.dark);
+    await _storage.setString(_key, next == ThemeMode.dark ? 'dark' : 'light');
     emit(next);
   }
 }

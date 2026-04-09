@@ -1,26 +1,26 @@
 import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../core/local/local_storage_service.dart';
 import '../../../home/data/models/character_model.dart';
 import '../../../home/domain/entities/character.dart';
 import '../../domain/repositories/favorite_repository.dart';
 
 class FavoriteRepositoryImpl implements FavoriteRepository {
-  final SharedPreferences prefs;
+  final LocalStorageService _storage;
 
   static const _favoriteIdsKey = 'favorite_ids';
   static const _favoriteDataKey = 'favorite_data';
 
-  FavoriteRepositoryImpl(this.prefs);
+  const FavoriteRepositoryImpl(this._storage);
 
   @override
   Future<Set<int>> getFavoriteIds() async {
-    final ids = prefs.getStringList(_favoriteIdsKey) ?? [];
+    final ids = await _storage.getStringList(_favoriteIdsKey) ?? [];
     return ids.map(int.parse).toSet();
   }
 
   @override
   Future<List<Character>> getFavorites() async {
-    final json = prefs.getString(_favoriteDataKey);
+    final json = await _storage.getString(_favoriteDataKey);
     if (json == null) return [];
     final list = jsonDecode(json) as List<dynamic>;
     return list
@@ -32,7 +32,7 @@ class FavoriteRepositoryImpl implements FavoriteRepository {
   Future<void> addFavorite(Character character) async {
     final ids = await getFavoriteIds();
     ids.add(character.id);
-    await prefs.setStringList(
+    await _storage.setStringList(
       _favoriteIdsKey,
       ids.map((id) => id.toString()).toList(),
     );
@@ -48,7 +48,7 @@ class FavoriteRepositoryImpl implements FavoriteRepository {
   Future<void> removeFavorite(int id) async {
     final ids = await getFavoriteIds();
     ids.remove(id);
-    await prefs.setStringList(
+    await _storage.setStringList(
       _favoriteIdsKey,
       ids.map((i) => i.toString()).toList(),
     );
@@ -66,10 +66,8 @@ class FavoriteRepositoryImpl implements FavoriteRepository {
 
   Future<void> _saveFavoriteData(List<Character> characters) async {
     final json = jsonEncode(
-      characters
-          .map((c) => CharacterModel.fromEntity(c).toJson())
-          .toList(),
+      characters.map((c) => CharacterModel.fromEntity(c).toJson()).toList(),
     );
-    await prefs.setString(_favoriteDataKey, json);
+    await _storage.setString(_favoriteDataKey, json);
   }
 }

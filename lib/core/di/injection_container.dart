@@ -35,6 +35,7 @@ import '../../features/location/domain/usecases/get_locations.dart';
 import '../../features/location/domain/usecases/get_multiple_locations.dart';
 import '../../features/location/presentation/bloc/location_bloc.dart';
 import '../../features/location/presentation/cubit/location_detail_cubit.dart';
+import '../local/local_storage_service.dart';
 import '../network/dio_client.dart';
 import '../network/network_info.dart';
 import '../theme/theme_cubit.dart';
@@ -42,26 +43,29 @@ import '../theme/theme_cubit.dart';
 final sl = GetIt.instance;
 
 Future<void> initDependencies() async {
-  // External
+  // ── External ───────────────────────────────────────────────────────────────
   final prefs = await SharedPreferences.getInstance();
-  sl.registerSingleton<SharedPreferences>(prefs);
   sl.registerSingleton<Dio>(DioClient.create());
   sl.registerSingleton<Connectivity>(Connectivity());
 
-  // Core
+  // ── Core ───────────────────────────────────────────────────────────────────
+  sl.registerLazySingleton<LocalStorageService>(
+    () => LocalStorageServiceImpl(prefs),
+  );
   sl.registerLazySingleton<NetworkInfo>(
     () => NetworkInfoImpl(sl<Connectivity>()),
   );
-  sl.registerLazySingleton<ThemeCubit>(
-    () => ThemeCubit(sl<SharedPreferences>()),
-  );
+
+  // ThemeCubit reads persisted preference asynchronously before first emit.
+  final themeCubit = await ThemeCubit.create(sl<LocalStorageService>());
+  sl.registerSingleton<ThemeCubit>(themeCubit);
 
   // ── Character ──────────────────────────────────────────────────────────────
   sl.registerLazySingleton<CharacterRemoteDataSource>(
     () => CharacterRemoteDataSourceImpl(sl<Dio>()),
   );
   sl.registerLazySingleton<CharacterLocalDataSource>(
-    () => CharacterLocalDataSourceImpl(sl<SharedPreferences>()),
+    () => CharacterLocalDataSourceImpl(sl<LocalStorageService>()),
   );
   sl.registerLazySingleton<CharacterRepository>(
     () => CharacterRepositoryImpl(
@@ -78,7 +82,7 @@ Future<void> initDependencies() async {
 
   // ── Favorite ───────────────────────────────────────────────────────────────
   sl.registerLazySingleton<FavoriteRepository>(
-    () => FavoriteRepositoryImpl(sl<SharedPreferences>()),
+    () => FavoriteRepositoryImpl(sl<LocalStorageService>()),
   );
   sl.registerLazySingleton(() => GetFavorites(sl<FavoriteRepository>()));
   sl.registerLazySingleton(() => ToggleFavorite(sl<FavoriteRepository>()));
@@ -88,7 +92,7 @@ Future<void> initDependencies() async {
     () => LocationRemoteDataSourceImpl(sl<Dio>()),
   );
   sl.registerLazySingleton<LocationLocalDataSource>(
-    () => LocationLocalDataSourceImpl(sl<SharedPreferences>()),
+    () => LocationLocalDataSourceImpl(sl<LocalStorageService>()),
   );
   sl.registerLazySingleton<LocationRepository>(
     () => LocationRepositoryImpl(
@@ -108,7 +112,7 @@ Future<void> initDependencies() async {
     () => EpisodeRemoteDataSourceImpl(sl<Dio>()),
   );
   sl.registerLazySingleton<EpisodeLocalDataSource>(
-    () => EpisodeLocalDataSourceImpl(sl<SharedPreferences>()),
+    () => EpisodeLocalDataSourceImpl(sl<LocalStorageService>()),
   );
   sl.registerLazySingleton<EpisodeRepository>(
     () => EpisodeRepositoryImpl(
@@ -121,7 +125,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => GetEpisodeById(sl<EpisodeRepository>()));
   sl.registerLazySingleton(() => GetMultipleEpisodes(sl<EpisodeRepository>()));
 
-  // ── BLoCs (factory — new instance per request) ─────────────────────────────
+  // ── BLoCs / Cubits (factory — new instance per route) ─────────────────────
   sl.registerFactory(
     () => CharacterDetailCubit(getCharacterById: sl<GetCharacterById>()),
   );
