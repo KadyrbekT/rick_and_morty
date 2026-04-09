@@ -565,6 +565,12 @@ abstract class AppLocalizations {
   /// In ru, this message translates to:
   /// **'Последнее местонахождение'**
   String get lastLocation;
+
+  /// Banner shown when device is offline
+  ///
+  /// In ru, this message translates to:
+  /// **'Нет подключения · показываются кешированные данные'**
+  String get offlineBanner;
 }
 
 class _AppLocalizationsDelegate

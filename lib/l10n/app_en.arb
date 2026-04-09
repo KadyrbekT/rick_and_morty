@@ -100,5 +100,7 @@
   "species": "Species",
   "gender": "Gender",
   "origin": "Origin",
-  "lastLocation": "Last known location"
+  "lastLocation": "Last known location",
+
+  "offlineBanner": "No connection · showing cached data"
 }

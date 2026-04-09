@@ -268,5 +268,8 @@
   "@origin": { "description": "Character location: origin" },
 
   "lastLocation": "Последнее местонахождение",
-  "@lastLocation": { "description": "Character location: last known location" }
+  "@lastLocation": { "description": "Character location: last known location" },
+
+  "offlineBanner": "Нет подключения · показываются кешированные данные",
+  "@offlineBanner": { "description": "Banner shown when device is offline" }
 }

@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'core/di/injection_container.dart';
 import 'core/l10n/l10n_extension.dart';
+import 'core/network/connectivity_banner.dart';
 import 'presentation/loader/overlay_loader.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_cubit.dart';
@@ -45,7 +46,9 @@ class App extends StatelessWidget {
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: AppLocalizations.supportedLocales,
-            builder: (context, child) => AppOverlayLoader(child: child!),
+            builder: (context, child) => ConnectivityBanner(
+              child: AppOverlayLoader(child: child!),
+            ),
             home: const _MainScaffold(),
           );
         },
