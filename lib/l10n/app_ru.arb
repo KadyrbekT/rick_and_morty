@@ -1,275 +1,354 @@
 {
   "@@locale": "ru",
-
   "appTitle": "Rick & Morty",
-  "@appTitle": { "description": "Application title" },
-
+  "@appTitle": {
+    "description": "Application title"
+  },
   "navCharacters": "Персонажи",
-  "@navCharacters": { "description": "Bottom nav tab: characters" },
-
+  "@navCharacters": {
+    "description": "Bottom nav tab: characters"
+  },
   "navLocations": "Локации",
-  "@navLocations": { "description": "Bottom nav tab: locations" },
-
+  "@navLocations": {
+    "description": "Bottom nav tab: locations"
+  },
   "navEpisodes": "Эпизоды",
-  "@navEpisodes": { "description": "Bottom nav tab: episodes" },
-
+  "@navEpisodes": {
+    "description": "Bottom nav tab: episodes"
+  },
   "navFavorites": "Избранное",
-  "@navFavorites": { "description": "Bottom nav tab: favorites" },
-
+  "@navFavorites": {
+    "description": "Bottom nav tab: favorites"
+  },
   "search": "Поиск",
-  "@search": { "description": "Generic search label" },
-
+  "@search": {
+    "description": "Generic search label"
+  },
   "closeSearch": "Закрыть поиск",
-  "@closeSearch": { "description": "Tooltip to close search bar" },
-
+  "@closeSearch": {
+    "description": "Tooltip to close search bar"
+  },
   "searchCharactersHint": "Поиск персонажей...",
-  "@searchCharactersHint": { "description": "Hint text for character search field" },
-
+  "@searchCharactersHint": {
+    "description": "Hint text for character search field"
+  },
   "searchLocationsHint": "Поиск локаций...",
-  "@searchLocationsHint": { "description": "Hint text for location search field" },
-
+  "@searchLocationsHint": {
+    "description": "Hint text for location search field"
+  },
   "searchEpisodesHint": "Поиск эпизодов...",
-  "@searchEpisodesHint": { "description": "Hint text for episode search field" },
-
+  "@searchEpisodesHint": {
+    "description": "Hint text for episode search field"
+  },
   "filter": "Фильтр",
-  "@filter": { "description": "Generic filter label" },
-
+  "@filter": {
+    "description": "Generic filter label"
+  },
   "filters": "Фильтры",
-  "@filters": { "description": "Filters section title" },
-
+  "@filters": {
+    "description": "Filters section title"
+  },
   "filterTooltip": "Фильтр",
-  "@filterTooltip": { "description": "Filter icon button tooltip" },
-
+  "@filterTooltip": {
+    "description": "Filter icon button tooltip"
+  },
   "reset": "Сбросить",
-  "@reset": { "description": "Reset filters button" },
-
+  "@reset": {
+    "description": "Reset filters button"
+  },
   "apply": "Применить",
-  "@apply": { "description": "Apply filters button" },
-
+  "@apply": {
+    "description": "Apply filters button"
+  },
   "retry": "Попробовать снова",
-  "@retry": { "description": "Retry button label" },
-
+  "@retry": {
+    "description": "Retry button label"
+  },
   "retryShort": "Повторить",
-  "@retryShort": { "description": "Short retry label" },
-
+  "@retryShort": {
+    "description": "Short retry label"
+  },
   "loadingError": "Ошибка загрузки",
-  "@loadingError": { "description": "Generic loading error message" },
-
+  "@loadingError": {
+    "description": "Generic loading error message"
+  },
   "emptyList": "Список пуст",
-  "@emptyList": { "description": "Shown when a list has no items" },
-
+  "@emptyList": {
+    "description": "Shown when a list has no items"
+  },
   "cancel": "Отмена",
-  "@cancel": { "description": "Cancel button" },
-
+  "@cancel": {
+    "description": "Cancel button"
+  },
   "information": "Информация",
-  "@information": { "description": "Section title: information" },
-
+  "@information": {
+    "description": "Section title: information"
+  },
   "type": "Тип",
-  "@type": { "description": "Generic type label" },
-
+  "@type": {
+    "description": "Generic type label"
+  },
   "dimension": "Измерение",
-  "@dimension": { "description": "Dimension label for locations" },
-
+  "@dimension": {
+    "description": "Dimension label for locations"
+  },
   "changeTheme": "Сменить тему",
-  "@changeTheme": { "description": "Tooltip for theme toggle button" },
-
+  "@changeTheme": {
+    "description": "Tooltip for theme toggle button"
+  },
   "sortBy": "Сортировка",
-  "@sortBy": { "description": "Sort popup tooltip" },
-
+  "@sortBy": {
+    "description": "Sort popup tooltip"
+  },
   "sortDefault": "По умолчанию",
-  "@sortDefault": { "description": "Sort option: default" },
-
+  "@sortDefault": {
+    "description": "Sort option: default"
+  },
   "sortNameAsc": "Имя А→Я",
-  "@sortNameAsc": { "description": "Sort option: name A to Z" },
-
+  "@sortNameAsc": {
+    "description": "Sort option: name A to Z"
+  },
   "sortNameDesc": "Имя Я→А",
-  "@sortNameDesc": { "description": "Sort option: name Z to A" },
-
+  "@sortNameDesc": {
+    "description": "Sort option: name Z to A"
+  },
   "sortAliveFirst": "Живые первые",
-  "@sortAliveFirst": { "description": "Sort option: alive first" },
-
+  "@sortAliveFirst": {
+    "description": "Sort option: alive first"
+  },
   "sortDeadFirst": "Мёртвые первые",
-  "@sortDeadFirst": { "description": "Sort option: dead first" },
-
+  "@sortDeadFirst": {
+    "description": "Sort option: dead first"
+  },
   "statusLabel": "Статус",
-  "@statusLabel": { "description": "Filter label: status" },
-
+  "@statusLabel": {
+    "description": "Filter label: status"
+  },
   "statusAlive": "Живой",
-  "@statusAlive": { "description": "Character status: alive" },
-
+  "@statusAlive": {
+    "description": "Character status: alive"
+  },
   "statusDead": "Мёртвый",
-  "@statusDead": { "description": "Character status: dead" },
-
+  "@statusDead": {
+    "description": "Character status: dead"
+  },
   "statusUnknown": "Неизвестно",
-  "@statusUnknown": { "description": "Character status: unknown" },
-
+  "@statusUnknown": {
+    "description": "Character status: unknown"
+  },
   "genderLabel": "Пол",
-  "@genderLabel": { "description": "Filter label: gender" },
-
+  "@genderLabel": {
+    "description": "Filter label: gender"
+  },
   "genderFemale": "Женщина",
-  "@genderFemale": { "description": "Gender: female" },
-
+  "@genderFemale": {
+    "description": "Gender: female"
+  },
   "genderMale": "Мужчина",
-  "@genderMale": { "description": "Gender: male" },
-
+  "@genderMale": {
+    "description": "Gender: male"
+  },
   "genderGenderless": "Без пола",
-  "@genderGenderless": { "description": "Gender: genderless" },
-
+  "@genderGenderless": {
+    "description": "Gender: genderless"
+  },
   "speciesLabel": "Вид (species)",
-  "@speciesLabel": { "description": "Filter label: species" },
-
+  "@speciesLabel": {
+    "description": "Filter label: species"
+  },
   "speciesHint": "Human, Alien...",
-  "@speciesHint": { "description": "Hint text for species filter field" },
-
+  "@speciesHint": {
+    "description": "Hint text for species filter field"
+  },
   "typeCharacterLabel": "Тип (type)",
-  "@typeCharacterLabel": { "description": "Filter label: character type" },
-
+  "@typeCharacterLabel": {
+    "description": "Filter label: character type"
+  },
   "typeCharacterHint": "Parasite, Genetic experiment...",
-  "@typeCharacterHint": { "description": "Hint text for character type filter field" },
-
+  "@typeCharacterHint": {
+    "description": "Hint text for character type filter field"
+  },
   "addToFavorites": "Добавить в избранное",
-  "@addToFavorites": { "description": "Tooltip: add to favorites" },
-
+  "@addToFavorites": {
+    "description": "Tooltip: add to favorites"
+  },
   "removeFromFavorites": "Убрать из избранного",
-  "@removeFromFavorites": { "description": "Tooltip: remove from favorites" },
-
+  "@removeFromFavorites": {
+    "description": "Tooltip: remove from favorites"
+  },
   "characterNotFound": "Персонаж \"{name}\" не найден",
   "@characterNotFound": {
     "description": "Shown when character search returns no results",
     "placeholders": {
-      "name": { "type": "String" }
+      "name": {
+        "type": "String"
+      }
     }
   },
-
   "typeLocationLabel": "Тип локации (type)",
-  "@typeLocationLabel": { "description": "Filter label: location type" },
-
+  "@typeLocationLabel": {
+    "description": "Filter label: location type"
+  },
   "typeLocationHint": "Planet, Cluster...",
-  "@typeLocationHint": { "description": "Hint text for location type filter" },
-
+  "@typeLocationHint": {
+    "description": "Hint text for location type filter"
+  },
   "dimensionLabel": "Измерение (dimension)",
-  "@dimensionLabel": { "description": "Filter label: dimension" },
-
+  "@dimensionLabel": {
+    "description": "Filter label: dimension"
+  },
   "dimensionHint": "C-137, Post-Apocalyptic...",
-  "@dimensionHint": { "description": "Hint text for dimension filter" },
-
+  "@dimensionHint": {
+    "description": "Hint text for dimension filter"
+  },
   "residents": "Жители",
-  "@residents": { "description": "Section title: residents" },
-
+  "@residents": {
+    "description": "Section title: residents"
+  },
   "residentsCount": "Жители ({count})",
   "@residentsCount": {
     "description": "Section title: residents with count",
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
-
   "noResidents": "Жителей нет",
-  "@noResidents": { "description": "Shown when location has no residents" },
-
+  "@noResidents": {
+    "description": "Shown when location has no residents"
+  },
   "locationNotFound": "Локация \"{name}\" не найдена",
   "@locationNotFound": {
     "description": "Shown when location search returns no results",
     "placeholders": {
-      "name": { "type": "String" }
+      "name": {
+        "type": "String"
+      }
     }
   },
-
   "episodesTitle": "Эпизоды",
-  "@episodesTitle": { "description": "Episodes page title" },
-
+  "@episodesTitle": {
+    "description": "Episodes page title"
+  },
   "episodeNotFound": "Эпизод \"{name}\" не найден",
   "@episodeNotFound": {
     "description": "Shown when episode search returns no results",
     "placeholders": {
-      "name": { "type": "String" }
+      "name": {
+        "type": "String"
+      }
     }
   },
-
   "filterBySeasonEpisode": "Фильтр по сезону / эпизоду",
-  "@filterBySeasonEpisode": { "description": "Episode filter sheet title" },
-
+  "@filterBySeasonEpisode": {
+    "description": "Episode filter sheet title"
+  },
   "season": "Сезон",
-  "@season": { "description": "Season label" },
-
+  "@season": {
+    "description": "Season label"
+  },
   "specificEpisode": "Конкретный эпизод",
-  "@specificEpisode": { "description": "Label for specific episode code field" },
-
+  "@specificEpisode": {
+    "description": "Label for specific episode code field"
+  },
   "specificEpisodeHint": "S01E01, S03E07...",
-  "@specificEpisodeHint": { "description": "Hint for episode code field" },
-
+  "@specificEpisodeHint": {
+    "description": "Hint for episode code field"
+  },
   "episodeCharactersCount": "Персонажи ({count})",
   "@episodeCharactersCount": {
     "description": "Section title: characters with count",
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
-
   "noEpisodeCharacters": "Персонажей нет",
-  "@noEpisodeCharacters": { "description": "Shown when episode has no characters" },
-
+  "@noEpisodeCharacters": {
+    "description": "Shown when episode has no characters"
+  },
   "characterCountLabel": "персонажей",
-  "@characterCountLabel": { "description": "Suffix for character count in episode card" },
-
+  "@characterCountLabel": {
+    "description": "Suffix for character count in episode card"
+  },
   "airDate": "Дата выхода",
-  "@airDate": { "description": "Air date label" },
-
+  "@airDate": {
+    "description": "Air date label"
+  },
   "episodeCode": "Код эпизода",
-  "@episodeCode": { "description": "Episode code label (e.g. S03E07)" },
-
+  "@episodeCode": {
+    "description": "Episode code label (e.g. S03E07)"
+  },
   "favoritesTitle": "Избранное",
-  "@favoritesTitle": { "description": "Favorites page title" },
-
+  "@favoritesTitle": {
+    "description": "Favorites page title"
+  },
   "clearFavorites": "Очистить избранное",
-  "@clearFavorites": { "description": "Tooltip and dialog title for clearing all favorites" },
-
+  "@clearFavorites": {
+    "description": "Tooltip and dialog title for clearing all favorites"
+  },
   "clearFavoritesContent": "Все персонажи будут удалены из избранного.",
-  "@clearFavoritesContent": { "description": "Dialog body for clearing favorites" },
-
+  "@clearFavoritesContent": {
+    "description": "Dialog body for clearing favorites"
+  },
   "clear": "Очистить",
-  "@clear": { "description": "Clear button label" },
-
+  "@clear": {
+    "description": "Clear button label"
+  },
   "noFavorites": "Избранных персонажей нет",
-  "@noFavorites": { "description": "Empty favorites title" },
-
+  "@noFavorites": {
+    "description": "Empty favorites title"
+  },
   "noFavoritesHint": "Нажмите ★ на карточке персонажа,\nчтобы добавить его в избранное",
-  "@noFavoritesHint": { "description": "Empty favorites hint" },
-
+  "@noFavoritesHint": {
+    "description": "Empty favorites hint"
+  },
   "removedFromFavorites": "{name} удалён из избранного",
   "@removedFromFavorites": {
     "description": "SnackBar message after removing from favorites",
     "placeholders": {
-      "name": { "type": "String" }
+      "name": {
+        "type": "String"
+      }
     }
   },
-
   "characterTraits": "Характеристики",
-  "@characterTraits": { "description": "Character detail section: traits" },
-
+  "@characterTraits": {
+    "description": "Character detail section: traits"
+  },
   "characterLocations": "Локации",
-  "@characterLocations": { "description": "Character detail section: locations" },
-
+  "@characterLocations": {
+    "description": "Character detail section: locations"
+  },
   "characterEpisodesCount": "Эпизоды ({count})",
   "@characterEpisodesCount": {
     "description": "Character detail section: episodes with count",
     "placeholders": {
-      "count": { "type": "int" }
+      "count": {
+        "type": "int"
+      }
     }
   },
-
   "species": "Вид",
-  "@species": { "description": "Character trait: species" },
-
+  "@species": {
+    "description": "Character trait: species"
+  },
   "gender": "Пол",
-  "@gender": { "description": "Character trait: gender" },
-
+  "@gender": {
+    "description": "Character trait: gender"
+  },
   "origin": "Происхождение",
-  "@origin": { "description": "Character location: origin" },
-
+  "@origin": {
+    "description": "Character location: origin"
+  },
   "lastLocation": "Последнее местонахождение",
-  "@lastLocation": { "description": "Character location: last known location" },
-
+  "@lastLocation": {
+    "description": "Character location: last known location"
+  },
   "offlineBanner": "Нет подключения к интернету",
-  "@offlineBanner": { "description": "Banner shown when device is offline" }
+  "@offlineBanner": {
+    "description": "Banner shown when device is offline"
+  }
 }

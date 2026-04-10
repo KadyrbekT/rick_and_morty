@@ -1,6 +1,5 @@
 {
   "@@locale": "en",
-
   "appTitle": "Rick & Morty",
   "navCharacters": "Characters",
   "navLocations": "Locations",
@@ -47,7 +46,11 @@
   "removeFromFavorites": "Remove from favorites",
   "characterNotFound": "Character \"{name}\" not found",
   "@characterNotFound": {
-    "placeholders": { "name": { "type": "String" } }
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   },
   "typeLocationLabel": "Location type",
   "typeLocationHint": "Planet, Cluster...",
@@ -56,17 +59,29 @@
   "residents": "Residents",
   "residentsCount": "Residents ({count})",
   "@residentsCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "noResidents": "No residents",
   "locationNotFound": "Location \"{name}\" not found",
   "@locationNotFound": {
-    "placeholders": { "name": { "type": "String" } }
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   },
   "episodesTitle": "Episodes",
   "episodeNotFound": "Episode \"{name}\" not found",
   "@episodeNotFound": {
-    "placeholders": { "name": { "type": "String" } }
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   },
   "filterBySeasonEpisode": "Filter by season / episode",
   "season": "Season",
@@ -74,7 +89,11 @@
   "specificEpisodeHint": "S01E01, S03E07...",
   "episodeCharactersCount": "Characters ({count})",
   "@episodeCharactersCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "noEpisodeCharacters": "No characters",
   "characterCountLabel": "characters",
@@ -88,19 +107,25 @@
   "noFavoritesHint": "Tap ★ on a character card\nto add it to favorites",
   "removedFromFavorites": "{name} removed from favorites",
   "@removedFromFavorites": {
-    "placeholders": { "name": { "type": "String" } }
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   },
-
   "characterTraits": "Traits",
   "characterLocations": "Locations",
   "characterEpisodesCount": "Episodes ({count})",
   "@characterEpisodesCount": {
-    "placeholders": { "count": { "type": "int" } }
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   },
   "species": "Species",
   "gender": "Gender",
   "origin": "Origin",
   "lastLocation": "Last known location",
-
   "offlineBanner": "No internet connection"
 }
