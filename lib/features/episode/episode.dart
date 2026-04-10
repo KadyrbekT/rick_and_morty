@@ -1,12 +1,16 @@
+// Domain
 export 'domain/entities/episode.dart';
 export 'domain/repositories/episode_repository.dart';
+export 'domain/usecases/get_episode_by_id.dart';
 export 'domain/usecases/get_episodes.dart';
-export 'data/models/episode_model.dart';
-export 'data/datasources/episode_remote_datasource.dart';
-export 'data/datasources/episode_local_datasource.dart';
-export 'data/repositories/episode_repository_impl.dart';
+export 'domain/usecases/get_multiple_episodes.dart';
+
+// Presentation
+export 'presentation/bloc/episode_bloc.dart';
 export 'presentation/bloc/episode_event.dart';
 export 'presentation/bloc/episode_state.dart';
-export 'presentation/bloc/episode_bloc.dart';
+export 'presentation/cubit/episode_detail_cubit.dart';
+export 'presentation/cubit/episode_detail_state.dart';
+export 'presentation/pages/episode_detail_page.dart';
 export 'presentation/pages/episode_page.dart';
 export 'presentation/widgets/episode_card.dart';

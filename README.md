@@ -1,70 +1,88 @@
 # Rick & Morty App
 
-Мобильное приложение на Flutter для просмотра персонажей мультсериала «Рик и Морти» с возможностью добавления в избранное и работой в офлайн-режиме.
+Мобильное приложение на Flutter для просмотра персонажей, локаций и эпизодов мультсериала «Рик и Морти» с избранным и полноценным офлайн-режимом.
 
 ---
 
 ## Функциональность
 
-- **Список персонажей** — карточки с фото, именем, статусом (жив/мёртв), видом, полом и локацией
-- **Пагинация** — автоматическая подгрузка следующей страницы при прокрутке (20 персонажей за раз)
-- **Избранное** — добавление/удаление персонажей, свайп для удаления, сохранение в SharedPreferences
-- **Оффлайн-режим** — закешированные данные отображаются при отсутствии интернета
-- **Поиск** — поиск по имени через Rick & Morty API
-- **Сортировка** — по имени (А→Я / Я→А) и статусу (живые/мёртвые первые)
-- **Смена темы** — светлая и тёмная тема с сохранением выбора
+- **Персонажи** — карточки с фото, именем, статусом, видом, полом и локацией; пагинация; поиск; фильтр (статус, вид, тип, пол); сортировка (имя А→Я / Я→А, живые/мёртвые первые)
+- **Локации** — список с пагинацией, поиск, фильтр (тип, измерение), детальная страница с жителями
+- **Эпизоды** — список с пагинацией, поиск, фильтр по коду серии, детальная страница с актёрами
+- **Избранное** — добавление/удаление персонажей, свайп для удаления, персистентное хранение
+- **Офлайн-режим** — кэшированные данные отображаются без интернета; баннер при отсутствии сети
+- **Тема** — светлая и тёмная, сохраняется между сессиями
+- **Локализация** — русский и английский (ARB + flutter_localizations)
 
 ---
 
 ## Архитектура
 
-Проект построен по принципу **Clean Architecture** с разделением на три слоя:
+Проект построен по **Clean Architecture** с feature-first структурой.
 
 ```
 lib/
-├── core/                          # Общие утилиты
+├── app/
+│   ├── app.dart                   # MaterialApp + глобальные BlocProvider-ы
+│   └── view/
+│       └── main_scaffold.dart     # BottomNavigationBar + IndexedStack
+│
+├── core/
 │   ├── constants/                 # API URL константы
 │   ├── di/                        # Dependency Injection (GetIt)
 │   ├── error/                     # Exceptions & Failures
-│   ├── network/                   # Dio client, NetworkInfo
-│   └── theme/                     # AppTheme + ThemeCubit
+│   ├── l10n/                      # AppLocalizations extension
+│   ├── local/                     # LocalStorageService (абстракция над SharedPreferences)
+│   ├── network/                   # DioClient, NetworkInfo, ConnectivityBanner
+│   ├── observers/                 # AppBlocObserver
+│   ├── theme/                     # AppTheme + ThemeCubit
+│   ├── usecases/                  # UseCase<T, Params> + NoParams, IdParam, IdsParam
+│   └── widgets/                   # OverlayLoader
 │
 ├── features/
-│   ├── home/                      # Фича: список персонажей
+│   ├── home/                      # Персонажи
 │   │   ├── data/
-│   │   │   ├── datasources/       # Remote (Dio) + Local (SharedPreferences)
+│   │   │   ├── datasources/       # CharacterRemoteDataSource + CharacterLocalDataSource
 │   │   │   ├── models/            # CharacterModel (JSON ↔ Entity)
 │   │   │   └── repositories/      # CharacterRepositoryImpl
 │   │   ├── domain/
-│   │   │   ├── entities/          # Character (Equatable)
-│   │   │   ├── repositories/      # Abstract CharacterRepository
-│   │   │   └── usecases/          # GetCharacters (CharacterParams)
+│   │   │   ├── entities/          # Character, CharacterFilter, SortBy
+│   │   │   ├── repositories/      # CharacterRepository (abstract)
+│   │   │   └── usecases/          # GetCharacters, GetCharacterById, GetMultipleCharacters
 │   │   └── presentation/
-│   │       ├── bloc/              # CharacterBloc + Event + State
-│   │       ├── pages/             # HomePage
+│   │       ├── bloc/              # CharacterBloc + sealed Event + State
+│   │       ├── cubit/             # CharacterDetailCubit
+│   │       ├── pages/             # HomePage, CharacterDetailPage
 │   │       └── widgets/           # CharacterCard, CharacterShimmer
 │   │
-│   └── favorite/                  # Фича: избранное
-│       ├── data/repositories/     # FavoriteRepositoryImpl
-│       ├── domain/                # FavoriteRepository + UseCases
+│   ├── location/                  # Локации (аналогичная структура)
+│   ├── episode/                   # Эпизоды (аналогичная структура)
+│   └── favorite/                  # Избранное
+│       ├── data/repositories/     # FavoriteRepositoryImpl (только LocalStorage)
+│       ├── domain/                # FavoriteRepository + GetFavorites + ToggleFavorite
 │       └── presentation/          # FavoriteBloc + FavoritePage
 │
-├── app.dart                       # Корневой виджет + BottomNavigationBar
-├── bootstrap.dart                 # Инициализация (DI, BLoC observer, orientation)
+├── l10n/                          # ARB файлы (app_ru.arb, app_en.arb) + сгенерированный код
+├── bootstrap.dart                 # Инициализация: DI, BlocObserver, ориентация экрана
 └── main.dart                      # Точка входа
 ```
 
-### Паттерны и принципы
+### Слои и их ответственность
 
 | Слой | Ответственность |
-|------|-----------------|
-| **Domain** | Бизнес-логика, не зависит ни от чего |
-| **Data** | Источники данных (API + кеш), маппинг |
-| **Presentation** | BLoC + UI, только отображение состояний |
+|---|---|
+| **Domain** | Бизнес-логика и контракты; не зависит ни от Flutter, ни от внешних пакетов |
+| **Data** | Источники данных (API + кэш), маппинг моделей в entities |
+| **Presentation** | BLoC/Cubit + UI; только отображение состояний |
 
-- `Either<Failure, T>` (dartz) — явная обработка ошибок без исключений в BLoC
-- `sealed class` для Event — полное покрытие всех кейсов компилятором
-- `IndexedStack` + `AutomaticKeepAliveClientMixin` — сохранение состояния вкладок
+### Ключевые паттерны
+
+- **`UseCase<T, Params>`** — единый контракт для всех use cases; результат всегда `Either<Failure, T>`
+- **`Either<Failure, T>`** (dartz) — явная обработка ошибок без исключений в BLoC
+- **`sealed class` Event** — компилятор гарантирует полное покрытие всех событий
+- **`copyWith` + `clearError`** — иммутабельное состояние без лишних перестроений
+- **`LocalStorageService`** — абстракция над SharedPreferences; реализацию можно заменить (Hive, Isar) без изменения фич
+- **`IndexedStack` + `AutomaticKeepAliveClientMixin`** — сохранение состояния вкладок при переключении
 
 ---
 
@@ -75,39 +93,31 @@ lib/
 | State Management | `flutter_bloc` 8.x + `bloc` |
 | Dependency Injection | `get_it` |
 | Networking | `dio` |
-| Local Storage | `shared_preferences` |
 | Connectivity | `connectivity_plus` |
-| Functional types | `dartz` (Either<Failure, T>) |
-| Loading skeleton | `shimmer` |
-| Equatable models | `equatable` |
+| Local Storage | `shared_preferences` |
+| Functional types | `dartz` (`Either<Failure, T>`) |
+| Локализация | `flutter_localizations` + `intl` |
+| Skeleton loader | `shimmer` |
+| Value equality | `equatable` |
 
 ---
 
 ## Запуск проекта
 
-### Требования
-
-- Flutter SDK ≥ 3.11.0
-- Dart SDK ≥ 3.0.0
-
-### Установка и запуск
+**Требования:** Flutter SDK ≥ 3.11.0
 
 ```bash
-# Клонировать репозиторий
 git clone <repo-url>
 cd rick_and_morty
 
-# Установить зависимости
 flutter pub get
-
-# Запустить приложение
 flutter run
+```
 
-# Собрать APK (Android)
-flutter build apk --release
-
-# Собрать IPA (iOS)
-flutter build ios --release
+Сборка релиза:
+```bash
+flutter build apk --release   # Android
+flutter build ios --release   # iOS
 ```
 
 ---
@@ -116,5 +126,12 @@ flutter build ios --release
 
 Публичный [Rick and Morty API](https://rickandmortyapi.com):
 
-- `GET /character?page={n}` — список персонажей с пагинацией
-- `GET /character?name={query}&page={n}` — поиск по имени
+| Эндпоинт | Описание |
+|---|---|
+| `GET /character?page={n}&name={q}&status={s}...` | Список персонажей с фильтрами |
+| `GET /character/{id}` | Персонаж по ID |
+| `GET /character/{id1},{id2},...` | Несколько персонажей по ID |
+| `GET /location?page={n}&name={q}&type={t}...` | Список локаций с фильтрами |
+| `GET /location/{id}` | Локация по ID |
+| `GET /episode?page={n}&name={q}&episode={e}` | Список эпизодов с фильтрами |
+| `GET /episode/{id}` | Эпизод по ID |

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import '../../domain/entities/character.dart';
-import 'character_event.dart';
+import '../../domain/entities/character_filter.dart';
 
 enum CharacterStatus { initial, loading, success, failure }
 
